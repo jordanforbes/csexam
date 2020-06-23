@@ -1,0 +1,41 @@
+@model Jawn 
+<div class="row">
+    <h2>@Model.Title</h2>
+</div>
+    @if(Model.Organizer.UserId == ViewBag.User.UserId)
+    {
+        <div class="row">
+            <a href="/jawn/@Model.JawnId/delete" class="btn btn-danger">
+                Delete
+            </a>
+        </div>
+    }
+
+    <p><b>Event Coordinator:</b></p>
+    <p> @Model.Organizer.Name</p>
+    <br>
+    <p><b>Description:</b></p>
+    <p>@Model.Description</p>
+    <p><b>Attendees:</b></p>
+    <ul class="list-group">
+        @foreach( var u in Model.Attendees)
+        {
+            @if(ViewBag.User.UserId == u.JawnGoer.UserId )
+            {
+                <li class="list-group-item">
+                    @u.JawnGoer.Name 
+                    <a asp-action="ToggleJawn" asp-route-jawnId="@Model.JawnId" asp-route-status="leave" class="btn btn-info">Flake</a>
+                </li>
+            }else{
+                <li class="list-group-item">
+                    @u.JawnGoer.Name
+                </li>
+            }
+        }
+    </ul>
+    @if(Model.Attendees.Any( a => a.UserId == ViewBag.User.UserId)){
+
+    }else{
+    <a asp-action="ToggleJawn" asp-route-jawnId="@Model.JawnId" asp-route-status="join" class="btn btn-info">Attend</a>
+
+    }
